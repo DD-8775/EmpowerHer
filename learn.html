@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn Skills | EmpowerHer</title>
+    <style>
+        /* --- THEME COLORS --- */
+        :root {
+            --primary: #2A9D8F; --secondary: #E76F51; --accent: #E9C46A; 
+            --bg: #FDFCF5; --text: #264653; --white: #ffffff;
+            --shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); }
+        a { text-decoration: none; color: inherit; }
+
+        /* --- NAV --- */
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 5%; background: var(--white); position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
+        .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+        .nav-links { display: flex; gap: 2rem; }
+        .btn-primary { background: var(--secondary); color: white; padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; }
+
+        /* --- HERO --- */
+        .learn-hero {
+            background: #e0f2f1;
+            padding: 3rem 5%;
+            text-align: center;
+            border-bottom: 5px solid var(--accent);
+        }
+        .learn-hero h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .learn-hero p { max-width: 600px; margin: 0 auto; color: #555; }
+
+        /* --- PROGRESS BAR --- */
+        .progress-section {
+            background: var(--white); padding: 1.5rem 5%; margin: -30px 5% 2rem;
+            border-radius: 15px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 20px;
+        }
+        .progress-bar-bg { flex: 1; height: 10px; background: #eee; border-radius: 5px; overflow: hidden; }
+        .progress-fill { width: 35%; height: 100%; background: var(--success, #28a745); }
+
+        /* --- COURSE GRID --- */
+        .container { padding: 0 5% 4rem; }
+        .filters { display: flex; gap: 15px; margin-bottom: 2rem; overflow-x: auto; padding-bottom: 10px; }
+        .filter-pill { padding: 8px 20px; background: var(--white); border: 1px solid #ccc; border-radius: 50px; cursor: pointer; white-space: nowrap; }
+        .filter-pill.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; }
+        
+        .video-card {
+            background: var(--white); border-radius: 15px; overflow: hidden; box-shadow: var(--shadow); transition: 0.3s;
+        }
+        .video-card:hover { transform: translateY(-5px); }
+        
+        .thumbnail {
+            height: 160px; background: #ddd; position: relative; display: flex; align-items: center; justify-content: center;
+            background-size: cover; background-position: center;
+        }
+        .play-btn { font-size: 3rem; color: rgba(255,255,255,0.8); }
+        
+        .card-body { padding: 1.5rem; }
+        .tag { font-size: 0.75rem; color: var(--primary); font-weight: bold; text-transform: uppercase; margin-bottom: 5px; display: block; }
+        .duration { font-size: 0.85rem; color: #888; display: flex; align-items: center; gap: 5px; margin-top: 10px; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .progress-section { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .progress-bar-bg { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">EmpowerHer</div>
+        <div class="nav-links">
+            <a href="000 EmpowerHer.html">Home</a>
+            <a href="jobs.html">Find Work</a>
+            <a href="community.html">Community</a>
+        </div>
+        
+    </nav>
+
+    <div class="learn-hero">
+        <h1>Learn in 5 Minutes</h1>
+        <p>Short, simple videos to help you manage orders, use digital payments, and talk to clients confidently.</p>
+    </div>
+
+    <div class="progress-section">
+        <div>
+            <strong>Your Learning Streak:</strong> 🔥 3 Days
+        </div>
+        <div class="progress-bar-bg">
+            <div class="progress-fill"></div>
+        </div>
+        <div style="font-size: 0.9rem;">35% Complete</div>
+    </div>
+
+    <div class="container">
+        <div class="filters">
+            <div class="filter-pill active">All Skills</div>
+            <div class="filter-pill">Digital Tools</div>
+            <div class="filter-pill">Cooking Tips</div>
+            <div class="filter-pill">Packaging</div>
+            <div class="filter-pill">English</div>
+        </div>
+
+        <div class="video-grid">
+            <div class="video-card">
+                <div class="thumbnail" style="background-color: #264653;">
+                    <span class="play-btn">▶</span>
+                </div>
+                <div class="card-body">
+                    <span class="tag">Digital Tools</span>
+                    <h3>How to use Google Pay safely</h3>
+                    <div class="duration">⏱ 4 mins • Beginner</div>
+                </div>
+            </div>
+
+            <div class="video-card">
+                <div class="thumbnail" style="background-color: #E76F51;">
+                    <span class="play-btn">▶</span>
+                </div>
+                <div class="card-body">
+                    <span class="tag">Business</span>
+                    <h3>Pricing your Tiffin Service</h3>
+                    <div class="duration">⏱ 8 mins • Intermediate</div>
+                </div>
+            </div>
+
+            <div class="video-card">
+                <div class="thumbnail" style="background-color: #E9C46A;">
+                    <span class="play-btn">▶</span>
+                </div>
+                <div class="card-body">
+                    <span class="tag">Packaging</span>
+                    <h3>Eco-friendly Packing Ideas</h3>
+                    <div class="duration">⏱ 5 mins • Creative</div>
+                </div>
+            </div>
+
+            <div class="video-card">
+                <div class="thumbnail" style="background-color: #2A9D8F;">
+                    <span class="play-btn">▶</span>
+                </div>
+                <div class="card-body">
+                    <span class="tag">Soft Skills</span>
+                    <h3>Basic English for Client Calls</h3>
+                    <div class="duration">⏱ 6 mins • Beginner</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

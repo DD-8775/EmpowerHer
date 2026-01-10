@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community | EmpowerHer</title>
+    <style>
+        /* --- THEME COLORS --- */
+        :root {
+            --primary: #2A9D8F; --secondary: #E76F51; --bg: #FDFCF5; 
+            --text: #264653; --white: #ffffff; --shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); }
+        a { text-decoration: none; color: inherit; }
+
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 5%; background: var(--white); box-shadow: var(--shadow); position: sticky; top: 0; z-index: 100;}
+        .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+        .nav-links { display: flex; gap: 2rem; }
+        .btn-primary { background: var(--secondary); color: white; padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; border: none;}
+
+        /* --- LAYOUT --- */
+        .layout-grid {
+            display: grid; grid-template-columns: 2.5fr 1fr; gap: 2rem;
+            max-width: 1200px; margin: 2rem auto; padding: 0 5%;
+        }
+
+        /* --- FEED (LEFT) --- */
+        .create-post {
+            background: var(--white); padding: 1.5rem; border-radius: 15px; box-shadow: var(--shadow); margin-bottom: 2rem;
+        }
+        .post-input {
+            width: 100%; border: 1px solid #ddd; padding: 1rem; border-radius: 10px; margin-bottom: 1rem; resize: none; font-family: inherit;
+        }
+
+        .post-card {
+            background: var(--white); border-radius: 15px; box-shadow: var(--shadow); padding: 1.5rem; margin-bottom: 1.5rem;
+        }
+        .post-header { display: flex; gap: 15px; align-items: center; margin-bottom: 1rem; }
+        .avatar { width: 50px; height: 50px; background: #ddd; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #555; }
+        .user-meta h4 { margin-bottom: 2px; }
+        .user-meta span { font-size: 0.8rem; color: #888; }
+        
+        .post-actions {
+            border-top: 1px solid #eee; margin-top: 1rem; padding-top: 1rem; display: flex; gap: 2rem;
+        }
+        .action-btn { color: #666; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 0.9rem; }
+        .action-btn:hover { color: var(--primary); }
+
+        /* --- SIDEBAR (RIGHT) --- */
+        .sidebar-card {
+            background: var(--white); padding: 1.5rem; border-radius: 15px; box-shadow: var(--shadow); margin-bottom: 2rem;
+        }
+        .sidebar-title { font-size: 1.1rem; margin-bottom: 1rem; border-bottom: 2px solid var(--primary); padding-bottom: 5px; display: inline-block;}
+        
+        .mentor-item { display: flex; gap: 10px; align-items: center; margin-bottom: 15px; }
+        .mentor-badge { background: #e0f2f1; color: var(--primary); font-size: 0.7rem; padding: 2px 8px; border-radius: 4px; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .layout-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">EmpowerHer</div>
+        <div class="nav-links">
+            <a href="000 EmpowerHer.html">Home</a>
+            <a href="jobs.html">Find Work</a>
+            <a href="learn.html">Learn Skills</a>
+        </div>
+        
+    </nav>
+
+    <div class="layout-grid">
+        
+        <main>
+            <div class="create-post">
+                <h3 style="margin-bottom: 1rem;">Ask the Community</h3>
+                <textarea class="post-input" rows="3" placeholder="Share your success story or ask a question..."></textarea>
+                <div style="text-align: right;">
+                    <button class="btn-primary">Post</button>
+                </div>
+            </div>
+
+            <div class="post-card">
+                <div class="post-header">
+                    <div class="avatar" style="background: #ffe3e3; color: #d63031;">AS</div>
+                    <div class="user-meta">
+                        <h4>Anita Sharma</h4>
+                        <span>Home Chef • 2 hours ago</span>
+                    </div>
+                </div>
+                <p>I just delivered my first bulk order of 20 Tiffins! 😍 Thank you to the mentors here who helped me with packaging tips.</p>
+                <div class="post-actions">
+                    <div class="action-btn">❤️ 24 Likes</div>
+                    <div class="action-btn">💬 5 Comments</div>
+                    <div class="action-btn">↪ Share</div>
+                </div>
+            </div>
+
+            <div class="post-card">
+                <div class="post-header">
+                    <div class="avatar" style="background: #e3f2fd; color: #0984e3;">RK</div>
+                    <div class="user-meta">
+                        <h4>Riya Kapoor</h4>
+                        <span>Online Tutor • 5 hours ago</span>
+                    </div>
+                </div>
+                <p><strong>Question:</strong> How do you handle payments from parents? Do you ask for advance or end of month?</p>
+                <div class="post-actions">
+                    <div class="action-btn">❤️ 8 Likes</div>
+                    <div class="action-btn">💬 12 Answers</div>
+                </div>
+            </div>
+        </main>
+
+        <aside>
+            <div class="sidebar-card">
+                <h3 class="sidebar-title">Meet Mentors</h3>
+                
+                <div class="mentor-item">
+                    <div class="avatar" style="width: 40px; height: 40px;">👩‍🏫</div>
+                    <div>
+                        <div style="font-weight: bold; font-size: 0.9rem;">Dr. S. Rao</div>
+                        <span class="mentor-badge">Business Guide</span>
+                    </div>
+                </div>
+
+                <div class="mentor-item">
+                    <div class="avatar" style="width: 40px; height: 40px;">🎨</div>
+                    <div>
+                        <div style="font-weight: bold; font-size: 0.9rem;">Meena Ji</div>
+                        <span class="mentor-badge">Craft Expert</span>
+                    </div>
+                </div>
+                <button style="width: 100%; padding: 8px; background: white; border: 1px solid var(--primary); color: var(--primary); border-radius: 5px; cursor: pointer; margin-top: 10px;">View All Mentors</button>
+            </div>
+
+            <div class="sidebar-card">
+                <h3 class="sidebar-title">Upcoming Events</h3>
+                <p style="font-size: 0.9rem; margin-bottom: 10px;"><strong>📅 Saturday, 4 PM</strong></p>
+                <p style="font-size: 0.9rem;">Zoom: "How to balance Home & Work" with Guest Speaker.</p>
+                <a href="#" style="color: var(--secondary); font-weight: bold; font-size: 0.9rem; display: block; margin-top: 10px;">Register Free →</a>
+            </div>
+        </aside>
+
+    </div>
+
+</body>
+</html>
