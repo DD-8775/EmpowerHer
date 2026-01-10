@@ -3,314 +3,316 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HerHorizon | Empowering Homepreneurs</title>
+    <title>Login | EmpowerHer</title>
     <style>
-        /* --- CSS VARIABLES & RESET --- */
+        /* --- COPYING YOUR EXISTING THEME --- */
         :root {
             --primary: #2A9D8F; /* Calming Teal */
+            --primary-dark: #1f7a6f;
             --secondary: #E76F51; /* Warm Terracotta */
             --accent: #E9C46A; /* Soft Gold */
             --bg: #FDFCF5; /* Cream White */
             --text: #264653; /* Dark Charcoal */
             --white: #ffffff;
-            --shadow: 0 4px 15px rgba(0,0,0,0.05);
+            --shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
         body {
             background-color: var(--bg);
             color: var(--text);
-            line-height: 1.6;
-        }
-
-        a { text-decoration: none; color: inherit; }
-        ul { list-style: none; }
-
-        /* --- NAVIGATION --- */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem 5%;
-            background: var(--white);
-            box-shadow: var(--shadow);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
-
-        .nav-links a {
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover { color: var(--secondary); }
-
-        .btn-primary {
-            background-color: var(--secondary);
-            color: var(--white);
-            padding: 0.6rem 1.5rem;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: transform 0.2s;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            background-color: #d65d3f;
-        }
-
-        /* --- HERO SECTION --- */
-        .hero {
+            min-height: 100vh;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 4rem 5%;
-            min-height: 80vh;
-        }
-
-        .hero-text {
-            flex: 1;
-            padding-right: 2rem;
-        }
-
-        .hero-text h1 {
-            font-size: 3.5rem;
-            line-height: 1.2;
-            margin-bottom: 1.5rem;
-            color: var(--text);
-        }
-
-        .hero-text span { color: var(--primary); }
-
-        .hero-text p {
-            font-size: 1.2rem;
-            color: #666;
-            margin-bottom: 2rem;
-            max-width: 500px;
-        }
-
-        .hero-image {
-            flex: 1;
-            display: flex;
             justify-content: center;
+            padding: 20px;
         }
 
-        .hero-card {
+        /* --- LOGIN CONTAINER --- */
+        .container {
             background: var(--white);
-            padding: 2rem;
+            width: 100%;
+            max-width: 900px;
+            min-height: 600px;
+            display: flex;
             border-radius: 20px;
             box-shadow: var(--shadow);
-            width: 80%;
-            text-align: center;
-            border: 2px solid var(--primary);
-        }
-
-        /* --- CATEGORIES --- */
-        .categories {
-            padding: 4rem 5%;
-            text-align: center;
-        }
-
-        .section-title {
-            font-size: 2rem;
-            margin-bottom: 3rem;
+            overflow: hidden;
             position: relative;
-            display: inline-block;
         }
 
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 50%;
-            height: 4px;
-            background: var(--accent);
-            margin: 0.5rem auto 0;
-            border-radius: 2px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-
-        .card {
-            background: var(--white);
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: var(--shadow);
-            transition: transform 0.3s;
-            cursor: pointer;
-            border-bottom: 5px solid transparent;
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-            border-bottom: 5px solid var(--primary);
-        }
-
-        .icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        /* --- HOW IT WORKS --- */
-        .steps {
-            background-color: #eaf6f5; /* Light tint of Primary */
-            padding: 4rem 5%;
-        }
-
-        .step-container {
+        /* --- LEFT SIDE (IMAGE/BRANDING) --- */
+        .brand-section {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary) 0%, #218c7e 100%);
+            color: var(--white);
             display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            margin-top: 2rem;
+            flex-direction: column;
+            justify-content: center;
+            padding: 3rem;
+            position: relative;
         }
 
-        .step {
-            text-align: center;
-            max-width: 300px;
-            margin-bottom: 2rem;
-        }
-
-        .step-number {
-            background: var(--primary);
-            color: white;
-            width: 40px;
-            height: 40px;
+        .brand-section::after {
+            /* Decorative Circle */
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 200px;
+            height: 200px;
+            background: rgba(255,255,255,0.1);
             border-radius: 50%;
+        }
+
+        .brand-section h1 { font-size: 2.5rem; margin-bottom: 1rem; line-height: 1.2; }
+        .brand-section p { font-size: 1.1rem; opacity: 0.9; margin-bottom: 2rem; }
+        
+        .testimonial {
+            background: rgba(255,255,255,0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent);
+            font-style: italic;
+            margin-top: auto;
+        }
+
+        /* --- RIGHT SIDE (FORM) --- */
+        .form-section {
+            flex: 1;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .logo-text {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        /* --- TABS --- */
+        .tabs {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        .tab {
+            padding-bottom: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: #999;
+            transition: 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab.active {
+            color: var(--text);
+            border-bottom: 3px solid var(--secondary);
+        }
+
+        /* --- INPUTS --- */
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-size: 0.9rem; margin-bottom: 0.5rem; font-weight: 600; }
+        
+        .input-wrapper { position: relative; }
+        
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: 0.3s;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+        }
+
+        /* --- BUTTONS --- */
+        .btn-submit {
+            width: 100%;
+            background: var(--secondary);
+            color: var(--white);
+            padding: 12px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 1rem;
+        }
+
+        .btn-submit:hover {
+            background: #d65d3f;
+            transform: translateY(-2px);
+        }
+
+        .google-btn {
+            width: 100%;
+            background: var(--white);
+            border: 2px solid #eee;
+            padding: 12px;
+            border-radius: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 1rem;
-            font-weight: bold;
+            gap: 10px;
+            cursor: pointer;
+            margin-top: 1rem;
+            color: #555;
+            font-weight: 600;
+            transition: 0.3s;
         }
+        
+        .google-btn:hover { border-color: #ddd; background: #fafafa; }
 
-        /* --- FOOTER --- */
-        footer {
-            background: var(--text);
-            color: var(--white);
-            padding: 3rem 5%;
+        .divider {
             text-align: center;
+            margin: 1.5rem 0;
+            color: #999;
+            font-size: 0.9rem;
+            position: relative;
         }
+        
+        .divider::before, .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: #eee;
+        }
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
 
-        /* --- RESPONSIVE --- */
+        /* --- TOGGLE LOGIC --- */
+        .signup-field { display: none; }
+        
+        /* Mobile Responsive */
         @media (max-width: 768px) {
-            .hero {
-                flex-direction: column-reverse;
-                text-align: center;
-                padding: 2rem 5%;
-            }
-            .hero-text { padding-right: 0; }
-            .hero-text h1 { font-size: 2.5rem; }
-            .nav-links { display: none; } /* Simplified for demo */
+            .container { flex-direction: column; min-height: auto; }
+            .brand-section { padding: 2rem; display: none; /* Hide branding on small mobile to save space */ }
+            .form-section { padding: 2rem; }
         }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="logo">EmpowerHer</div>
-        <div class="nav-links">
-            <a href="jobs.html">Find Work</a>
-            <a href="learn.html">Learn Skills</a>
-            <a href="community.html">Community</a>
-            <a href="00 Login .html">Login</a>
+<div class="container">
+    <div class="brand-section">
+        <h1>Start your journey to<br>Financial Freedom.</h1>
+        <p>Join 10,000+ housewives earning safely from home.</p>
+        
+        <div class="testimonial">
+            "The platform is so easy to use. I created my profile in 2 minutes!"
+            <br><br>
+            <small>— Meera K, Joined 2 days ago</small>
         </div>
-        <a href="00 Login .html" class="btn-primary">Join Now</a>
-    </nav>
+    </div>
 
-    <section class="hero">
-        <div class="hero-text">
-            <h1>Turn your home skills into <span>Financial Independence</span>.</h1>
-            <p>Flexible work opportunities tailored for homemakers. Work 1 hour or 8 hours—it's your choice.</p>
-            <a href="jobs.html" class="btn-primary" style="padding: 1rem 2.5rem;">Start Earning Today</a>
+    <div class="form-section">
+        <a href="dashboard.html" class="logo-text">EmpowerHer</a>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('login')" id="tab-login">Login</div>
+            <div class="tab" onclick="switchTab('signup')" id="tab-signup">Sign Up</div>
         </div>
-        <div class="hero-image">
-            <div class="hero-card">
-                <span style="font-size: 4rem;">👩‍💻</span>
-                <h3>Welcome, Anita</h3>
-                <p><strong>3 New Jobs</strong> match your cooking skills today!</p>
-                <div style="margin-top: 1rem; background: #eee; height: 10px; border-radius: 5px;">
-                    <div style="width: 70%; background: var(--secondary); height: 100%; border-radius: 5px;"></div>
+
+        <form onsubmit="event.preventDefault(); handleSubmit();">
+            
+            <div class="form-group signup-field">
+                <label>Full Name</label>
+                <input type="text" placeholder="e.g. Anita Sharma">
+            </div>
+
+            <div class="form-group">
+                <label>Mobile Number</label>
+                <div class="input-wrapper">
+                    <input type="tel" placeholder="98765 43210" pattern="[0-9]{10}" required>
                 </div>
-                <p style="font-size: 0.8rem; margin-top: 0.5rem;">Profile Completion: 70%</p>
             </div>
-        </div>
-    </section>
 
-    <section class="categories">
-        <h2 class="section-title">What are you good at?</h2>
-        <div class="grid">
-            <div class="card">
-                <span class="icon">🍲</span>
-                <h3>Home Catering</h3>
-                <p>Sell home-cooked meals or tiffins to nearby offices.</p>
+            <div class="form-group">
+                <label id="pass-label">Password</label>
+                <input type="password" placeholder="••••••••" id="pass-input">
+                <div style="text-align: right; margin-top: 5px;">
+                    <a href="#" style="font-size: 0.8rem; color: var(--primary);">Forgot Password?</a>
+                </div>
             </div>
-            <div class="card">
-                <span class="icon">🧶</span>
-                <h3>Handicrafts</h3>
-                <p>Sell embroidery, knitting, or handmade decor.</p>
-            </div>
-            <div class="card">
-                <span class="icon">📚</span>
-                <h3>Online Tutoring</h3>
-                <p>Teach kids subjects, languages, or hobbies via video.</p>
-            </div>
-            <div class="card">
-                <span class="icon">⌨️</span>
-                <h3>Data Entry</h3>
-                <p>Simple typing jobs that can be done anytime.</p>
-            </div>
-        </div>
-    </section>
 
-    <section class="steps">
-        <div style="text-align: center;">
-            <h2 class="section-title">How it Works</h2>
-        </div>
-        <div class="step-container">
-            <div class="step">
-                <div class="step-number">1</div>
-                <h3>Create Profile</h3>
-                <p>Sign up simply using your phone number. No complex resumes required.</p>
-            </div>
-            <div class="step">
-                <div class="step-number">2</div>
-                <h3>Choose Tasks</h3>
-                <p>Browse jobs based on how much free time you have today.</p>
-            </div>
-            <div class="step">
-                <div class="step-number">3</div>
-                <h3>Get Paid Securely</h3>
-                <p>Receive payments directly to your bank account or UPI weekly.</p>
-            </div>
-        </div>
-    </section>
+            <button type="submit" class="btn-submit" id="submit-btn">Login Securely</button>
 
-    <footer>
-        <p>&copy; 2024 HerHorizon. Empowering households, one job at a time.</p>
-        <p style="font-size: 0.8rem; margin-top: 1rem; opacity: 0.7;">Safety First Policy | Verified Employers Only</p>
-    </footer>
+            <div class="divider">OR</div>
+
+            <button class="google-btn">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="20" alt="G">
+                Continue with Google
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    const tabLogin = document.getElementById('tab-login');
+    const tabSignup = document.getElementById('tab-signup');
+    const signupFields = document.querySelectorAll('.signup-field');
+    const submitBtn = document.getElementById('submit-btn');
+    const passLabel = document.getElementById('pass-label');
+    const passInput = document.getElementById('pass-input');
+
+    function switchTab(mode) {
+        if (mode === 'signup') {
+            // UI Changes for Signup
+            tabLogin.classList.remove('active');
+            tabSignup.classList.add('active');
+            
+            // Show Name Field
+            signupFields.forEach(field => field.style.display = 'block');
+            
+            // Change Password to 'Create Password'
+            passLabel.innerText = "Create Password";
+            submitBtn.innerText = "Create Account";
+            
+        } else {
+            // UI Changes for Login
+            tabSignup.classList.remove('active');
+            tabLogin.classList.add('active');
+            
+            // Hide Name Field
+            signupFields.forEach(field => field.style.display = 'none');
+            
+            // Reset Label
+            passLabel.innerText = "Password";
+            submitBtn.innerText = "Login Securely";
+        }
+    }
+
+    function handleSubmit() {
+        // Simple redirect simulation
+        const btnText = submitBtn.innerText;
+        submitBtn.innerText = "Processing...";
+        submitBtn.style.background = "#999";
+        
+        setTimeout(() => {
+            alert("Success! Redirecting to Dashboard...");
+            // In a real scenario, this would redirect to dashboard.html
+            window.location.href = "dashboard.html.html"; 
+            submitBtn.innerText = btnText;
+            submitBtn.style.background = "var(--secondary)";
+        }, 1500);
+    }
+</script>
 
 </body>
 </html>
