@@ -5,149 +5,142 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Community | EmpowerHer</title>
     <style>
-        /* --- THEME COLORS --- */
-        :root {
-            --primary: #2A9D8F; --secondary: #E76F51; --bg: #FDFCF5; 
-            --text: #264653; --white: #ffffff; --shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
+        :root { --primary: #2A9D8F; --secondary: #E76F51; --bg: #FDFCF5; --text: #264653; --white: #ffffff; --shadow: 0 4px 15px rgba(0,0,0,0.05); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background-color: var(--bg); color: var(--text); }
         a { text-decoration: none; color: inherit; }
-
         nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 5%; background: var(--white); box-shadow: var(--shadow); position: sticky; top: 0; z-index: 100;}
         .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
-        .nav-links { display: flex; gap: 2rem; }
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
         .btn-primary { background: var(--secondary); color: white; padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; border: none;}
-
-        /* --- LAYOUT --- */
-        .layout-grid {
-            display: grid; grid-template-columns: 2.5fr 1fr; gap: 2rem;
-            max-width: 1200px; margin: 2rem auto; padding: 0 5%;
-        }
-
-        /* --- FEED (LEFT) --- */
-        .create-post {
-            background: var(--white); padding: 1.5rem; border-radius: 15px; box-shadow: var(--shadow); margin-bottom: 2rem;
-        }
-        .post-input {
-            width: 100%; border: 1px solid #ddd; padding: 1rem; border-radius: 10px; margin-bottom: 1rem; resize: none; font-family: inherit;
-        }
-
-        .post-card {
-            background: var(--white); border-radius: 15px; box-shadow: var(--shadow); padding: 1.5rem; margin-bottom: 1.5rem;
-        }
+        .btn-logout { background: none; border: 1px solid #ccc; padding: 0.4rem 1rem; border-radius: 50px; cursor: pointer; font-size: 0.85rem; color: #666; }
+        .layout-grid { display: grid; grid-template-columns: 2.5fr 1fr; gap: 2rem; max-width: 1200px; margin: 2rem auto; padding: 0 5%; }
+        .create-post { background: var(--white); padding: 1.5rem; border-radius: 15px; box-shadow: var(--shadow); margin-bottom: 2rem; }
+        .post-input { width: 100%; border: 1px solid #ddd; padding: 1rem; border-radius: 10px; margin-bottom: 1rem; resize: none; font-family: inherit; font-size: 1rem; }
+        .post-card { background: var(--white); border-radius: 15px; box-shadow: var(--shadow); padding: 1.5rem; margin-bottom: 1.5rem; }
         .post-header { display: flex; gap: 15px; align-items: center; margin-bottom: 1rem; }
         .avatar { width: 50px; height: 50px; background: #ddd; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #555; }
         .user-meta h4 { margin-bottom: 2px; }
         .user-meta span { font-size: 0.8rem; color: #888; }
-        
-        .post-actions {
-            border-top: 1px solid #eee; margin-top: 1rem; padding-top: 1rem; display: flex; gap: 2rem;
-        }
-        .action-btn { color: #666; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 0.9rem; }
+        .post-actions { border-top: 1px solid #eee; margin-top: 1rem; padding-top: 1rem; display: flex; gap: 2rem; }
+        .action-btn { color: #666; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 0.9rem; background: none; border: none; font-family: inherit; }
         .action-btn:hover { color: var(--primary); }
-
-        /* --- SIDEBAR (RIGHT) --- */
-        .sidebar-card {
-            background: var(--white); padding: 1.5rem; border-radius: 15px; box-shadow: var(--shadow); margin-bottom: 2rem;
-        }
+        .action-btn.liked { color: #d63031; }
+        .comments-section { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #f0f0f0; display: none; }
+        .comments-section.open { display: block; }
+        .comment-item { display: flex; gap: 10px; margin-bottom: 10px; padding: 8px; background: #f9f9f9; border-radius: 8px; }
+        .comment-avatar { width: 30px; height: 30px; background: #e0e0e0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; flex-shrink: 0; }
+        .comment-input-row { display: flex; gap: 8px; margin-top: 10px; }
+        .comment-input { flex: 1; padding: 8px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem; outline: none; }
+        .comment-submit { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .sidebar-card { background: var(--white); padding: 1.5rem; border-radius: 15px; box-shadow: var(--shadow); margin-bottom: 2rem; }
         .sidebar-title { font-size: 1.1rem; margin-bottom: 1rem; border-bottom: 2px solid var(--primary); padding-bottom: 5px; display: inline-block;}
-        
         .mentor-item { display: flex; gap: 10px; align-items: center; margin-bottom: 15px; }
         .mentor-badge { background: #e0f2f1; color: var(--primary); font-size: 0.7rem; padding: 2px 8px; border-radius: 4px; }
-
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .layout-grid { grid-template-columns: 1fr; }
-        }
+        .toast { position: fixed; bottom: 30px; right: 30px; background: var(--text); color: white; padding: 15px 25px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); z-index: 9999; display: none; }
+        .toast.success { background: #28a745; }
+        .toast.error { background: #d63031; }
+        .loading-text { text-align: center; padding: 2rem; color: #999; }
+        @media (max-width: 768px) { .nav-links { display: none; } .layout-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
-
     <nav>
         <div class="logo">EmpowerHer</div>
         <div class="nav-links">
             <a href="dashboard.html">Home</a>
             <a href="jobs.html">Find Work</a>
             <a href="learn.html">Learn Skills</a>
+            <button class="btn-logout" id="logout-btn" onclick="logout()" style="display:none;">Logout</button>
         </div>
-        
     </nav>
-
     <div class="layout-grid">
-        
         <main>
             <div class="create-post">
                 <h3 style="margin-bottom: 1rem;">Ask the Community</h3>
-                <textarea class="post-input" rows="3" placeholder="Share your success story or ask a question..."></textarea>
-                <div style="text-align: right;">
-                    <button class="btn-primary">Post</button>
-                </div>
+                <textarea class="post-input" id="post-content" rows="3" placeholder="Share your success story or ask a question..."></textarea>
+                <div style="text-align: right;"><button class="btn-primary" id="post-btn" onclick="createPost()">Post</button></div>
             </div>
-
-            <div class="post-card">
-                <div class="post-header">
-                    <div class="avatar" style="background: #ffe3e3; color: #d63031;">AS</div>
-                    <div class="user-meta">
-                        <h4>Anita Sharma</h4>
-                        <span>Home Chef • 2 hours ago</span>
-                    </div>
-                </div>
-                <p>I just delivered my first bulk order of 20 Tiffins! 😍 Thank you to the mentors here who helped me with packaging tips.</p>
-                <div class="post-actions">
-                    <div class="action-btn">❤️ 24 Likes</div>
-                    <div class="action-btn">💬 5 Comments</div>
-                    <div class="action-btn">↪ Share</div>
-                </div>
-            </div>
-
-            <div class="post-card">
-                <div class="post-header">
-                    <div class="avatar" style="background: #e3f2fd; color: #0984e3;">RK</div>
-                    <div class="user-meta">
-                        <h4>Riya Kapoor</h4>
-                        <span>Online Tutor • 5 hours ago</span>
-                    </div>
-                </div>
-                <p><strong>Question:</strong> How do you handle payments from parents? Do you ask for advance or end of month?</p>
-                <div class="post-actions">
-                    <div class="action-btn">❤️ 8 Likes</div>
-                    <div class="action-btn">💬 12 Answers</div>
-                </div>
-            </div>
+            <div id="posts-feed"><div class="loading-text">Loading community posts...</div></div>
         </main>
-
         <aside>
             <div class="sidebar-card">
                 <h3 class="sidebar-title">Meet Mentors</h3>
-                
-                <div class="mentor-item">
-                    <div class="avatar" style="width: 40px; height: 40px;">👩‍🏫</div>
-                    <div>
-                        <div style="font-weight: bold; font-size: 0.9rem;">Dr. S. Rao</div>
-                        <span class="mentor-badge">Business Guide</span>
-                    </div>
-                </div>
-
-                <div class="mentor-item">
-                    <div class="avatar" style="width: 40px; height: 40px;">🎨</div>
-                    <div>
-                        <div style="font-weight: bold; font-size: 0.9rem;">Meena Ji</div>
-                        <span class="mentor-badge">Craft Expert</span>
-                    </div>
-                </div>
-                <button style="width: 100%; padding: 8px; background: white; border: 1px solid var(--primary); color: var(--primary); border-radius: 5px; cursor: pointer; margin-top: 10px;">View All Mentors</button>
+                <div id="mentors-list"><div class="loading-text" style="padding:0.5rem;">Loading...</div></div>
+                <button style="width:100%;padding:8px;background:white;border:1px solid var(--primary);color:var(--primary);border-radius:5px;cursor:pointer;margin-top:10px;">View All Mentors</button>
             </div>
-
             <div class="sidebar-card">
                 <h3 class="sidebar-title">Upcoming Events</h3>
-                <p style="font-size: 0.9rem; margin-bottom: 10px;"><strong>📅 Saturday, 4 PM</strong></p>
-                <p style="font-size: 0.9rem;">Zoom: "How to balance Home & Work" with Guest Speaker.</p>
-                <a href="#" style="color: var(--secondary); font-weight: bold; font-size: 0.9rem; display: block; margin-top: 10px;">Register Free →</a>
+                <p style="font-size:0.9rem;margin-bottom:10px;"><strong>📅 Saturday, 4 PM</strong></p>
+                <p style="font-size:0.9rem;">Zoom: "How to balance Home & Work" with Guest Speaker.</p>
+                <a href="#" style="color:var(--secondary);font-weight:bold;font-size:0.9rem;display:block;margin-top:10px;">Register Free →</a>
             </div>
         </aside>
-
     </div>
+    <div class="toast" id="toast"></div>
+<script>
+const API_BASE = window.location.origin;
+const token = localStorage.getItem('empowerher_token');
+if (token) document.getElementById('logout-btn').style.display = 'inline-block';
 
+function logout() { localStorage.removeItem('empowerher_token'); localStorage.removeItem('empowerher_user'); window.location.href = 'index.html'; }
+function showToast(msg, type='success') { const t=document.getElementById('toast'); t.textContent=msg; t.className='toast '+type; t.style.display='block'; setTimeout(()=>{t.style.display='none';},3000); }
+function getInitials(n) { return n.split(' ').map(w=>w[0]).join('').toUpperCase().substring(0,2); }
+function getAvatarColor(n) { const c=[{bg:'#ffe3e3',color:'#d63031'},{bg:'#e3f2fd',color:'#0984e3'},{bg:'#fff3cd',color:'#856404'},{bg:'#e0f2f1',color:'#2A9D8F'},{bg:'#f3e5f5',color:'#8e24aa'}]; return c[n.charCodeAt(0)%c.length]; }
+function timeAgo(d) { const now=new Date(), date=new Date(d+'Z'), diff=Math.floor((now-date)/1000); if(diff<60)return 'Just now'; if(diff<3600)return Math.floor(diff/60)+' min ago'; if(diff<86400)return Math.floor(diff/3600)+' hours ago'; return Math.floor(diff/86400)+' days ago'; }
+
+async function loadPosts() {
+    try {
+        const h = {}; if(token) h['Authorization']='Bearer '+token;
+        const res = await fetch(API_BASE+'/api/posts', {headers:h});
+        const data = await res.json();
+        const feed = document.getElementById('posts-feed');
+        if(!data.posts.length) { feed.innerHTML='<div class="loading-text">No posts yet. Be the first!</div>'; return; }
+        feed.innerHTML = data.posts.map(p => {
+            const ac=getAvatarColor(p.fullName), ini=getInitials(p.fullName);
+            return '<div class="post-card" id="post-'+p.id+'"><div class="post-header"><div class="avatar" style="background:'+ac.bg+';color:'+ac.color+';">'+ini+'</div><div class="user-meta"><h4>'+p.fullName+'</h4><span>'+(p.skills||'Member')+' • '+timeAgo(p.createdAt)+'</span></div></div><p>'+p.content+'</p><div class="post-actions"><button class="action-btn '+(p.userLiked?'liked':'')+'" onclick="toggleLike('+p.id+',this)">'+(p.userLiked?'❤️':'🤍')+' <span>'+p.likeCount+' Likes</span></button><button class="action-btn" onclick="toggleComments('+p.id+')">💬 <span>'+p.commentCount+' Comments</span></button><button class="action-btn" onclick="sharePost('+p.id+')">↪ Share</button></div><div class="comments-section" id="comments-'+p.id+'"><div id="comments-list-'+p.id+'"></div><div class="comment-input-row"><input class="comment-input" id="comment-input-'+p.id+'" placeholder="Write a comment..." onkeypress="if(event.key===\'Enter\')addComment('+p.id+')"><button class="comment-submit" onclick="addComment('+p.id+')">Send</button></div></div></div>';
+        }).join('');
+    } catch(e) { document.getElementById('posts-feed').innerHTML='<div class="loading-text">Error loading posts.</div>'; }
+}
+
+async function createPost() {
+    if(!token){showToast('Please login to post.','error');return;}
+    const content=document.getElementById('post-content').value.trim();
+    if(!content){showToast('Write something first.','error');return;}
+    const btn=document.getElementById('post-btn'); btn.disabled=true; btn.textContent='Posting...';
+    try {
+        const res=await fetch(API_BASE+'/api/posts',{method:'POST',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({content})});
+        const data=await res.json();
+        if(!res.ok){showToast(data.error,'error');return;}
+        document.getElementById('post-content').value=''; showToast('Post created!','success'); loadPosts();
+    } catch(e){showToast('Error creating post.','error');} finally{btn.disabled=false;btn.textContent='Post';}
+}
+
+async function toggleLike(id,btn) {
+    if(!token){showToast('Login to like.','error');return;}
+    try{const r=await fetch(API_BASE+'/api/posts/'+id+'/like',{method:'POST',headers:{'Authorization':'Bearer '+token}});const d=await r.json();if(r.ok){btn.classList.toggle('liked',d.liked);btn.innerHTML=(d.liked?'❤️':'🤍')+' <span>'+d.likeCount+' Likes</span>';}}catch(e){}
+}
+
+async function toggleComments(id) {
+    const s=document.getElementById('comments-'+id);
+    if(s.classList.contains('open')){s.classList.remove('open');return;}
+    s.classList.add('open');
+    try{const r=await fetch(API_BASE+'/api/posts/'+id+'/comments');const d=await r.json();const l=document.getElementById('comments-list-'+id);if(!d.comments.length){l.innerHTML='<p style="font-size:0.85rem;color:#999;margin-bottom:10px;">No comments yet.</p>';}else{l.innerHTML=d.comments.map(c=>{const ac=getAvatarColor(c.fullName);return '<div class="comment-item"><div class="comment-avatar" style="background:'+ac.bg+';color:'+ac.color+';">'+getInitials(c.fullName)+'</div><div style="font-size:0.85rem;"><strong>'+c.fullName+'</strong> '+c.content+'</div></div>';}).join('');}}catch(e){}
+}
+
+async function addComment(id) {
+    if(!token){showToast('Login to comment.','error');return;}
+    const inp=document.getElementById('comment-input-'+id);const c=inp.value.trim();if(!c)return;
+    try{const r=await fetch(API_BASE+'/api/posts/'+id+'/comments',{method:'POST',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({content:c})});if(r.ok){inp.value='';toggleComments(id);setTimeout(()=>toggleComments(id),100);showToast('Comment added!');}}catch(e){}
+}
+
+function sharePost(id){if(navigator.clipboard){navigator.clipboard.writeText(window.location.origin+'/community.html#post-'+id);showToast('Link copied!');}else{showToast('Share this page URL.');}}
+
+async function loadMentors() {
+    try{const r=await fetch(API_BASE+'/api/posts/mentors/all');const d=await r.json();document.getElementById('mentors-list').innerHTML=d.mentors.map(m=>'<div class="mentor-item"><div class="avatar" style="width:40px;height:40px;">'+m.icon+'</div><div><div style="font-weight:bold;font-size:0.9rem;">'+m.name+'</div><span class="mentor-badge">'+m.specialty+'</span></div></div>').join('');}catch(e){}
+}
+
+loadPosts(); loadMentors();
+</script>
 </body>
 </html>

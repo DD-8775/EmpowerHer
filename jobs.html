@@ -29,12 +29,17 @@
             position: sticky; top: 0; z-index: 1000;
         }
         .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
-        .nav-links { display: flex; gap: 2rem; }
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
         .nav-links a:hover { color: var(--secondary); }
         .btn-primary {
             background-color: var(--secondary); color: var(--white);
             padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600;
         }
+        .btn-logout {
+            background: none; border: 1px solid #ccc; padding: 0.4rem 1rem;
+            border-radius: 50px; cursor: pointer; font-size: 0.85rem; color: #666; transition: 0.3s;
+        }
+        .btn-logout:hover { border-color: var(--secondary); color: var(--secondary); }
 
         /* --- FILTERS SECTION --- */
         .search-container {
@@ -120,8 +125,25 @@
             margin-top: auto;
             cursor: pointer;
             transition: 0.3s;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
         }
         .btn-apply:hover { background: #1f7a6f; }
+        .btn-apply:disabled { background: #999; cursor: not-allowed; }
+        .btn-apply.applied { background: var(--success); cursor: default; }
+
+        /* Toast notification */
+        .toast {
+            position: fixed; bottom: 30px; right: 30px; background: var(--text);
+            color: white; padding: 15px 25px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            z-index: 9999; display: none; animation: slideUp 0.3s ease;
+        }
+        .toast.success { background: var(--success); }
+        .toast.error { background: #d63031; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .loading-text { text-align: center; padding: 3rem; color: #999; font-size: 1.1rem; }
 
         /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
@@ -138,144 +160,175 @@
             <a href="dashboard.html">Home</a>
             <a href="#" style="color: var(--secondary); font-weight: bold;">Find Work</a>
             <a href="community.html">Community</a>
-            
+            <button class="btn-logout" id="logout-btn" onclick="logout()" style="display:none;">Logout</button>
         </div>
         
     </nav>
 
     <section class="search-container">
         <h1>Find work that fits your schedule</h1>
-        <p>150+ Verified jobs available today</p>
+        <p id="job-total-hero">Loading jobs...</p>
         
         <div class="search-bar">
-            <select class="filter-select">
+            <select class="filter-select" id="filter-skill">
                 <option>Select Skill</option>
                 <option>Cooking</option>
                 <option>Teaching</option>
                 <option>Stitching</option>
+                <option>Art & Craft</option>
+                <option>Data Entry</option>
             </select>
-            <select class="filter-select">
+            <select class="filter-select" id="filter-time">
                 <option>Time Available</option>
                 <option>1 Hour</option>
                 <option>2-4 Hours</option>
                 <option>Full Day</option>
             </select>
-            <button class="btn-primary" style="border:none; cursor:pointer;">Search Jobs</button>
+            <button class="btn-primary" style="border:none; cursor:pointer;" onclick="loadJobs()">Search Jobs</button>
         </div>
     </section>
 
     <div class="container">
         <div class="section-header">
             <h2>Recent Opportunities</h2>
-            <span style="color: #666;">Showing 6 Jobs</span>
+            <span id="job-count" style="color: #666;">Loading...</span>
         </div>
 
-        <div class="job-grid">
-            
-            <div class="job-card">
-                <div class="card-header">
-                    <span class="badge cooking">Cooking</span>
-                    <span style="font-size:1.5rem;">🍲</span>
-                </div>
-                <div class="job-title">Home Chef for Tiffins</div>
-                <div class="job-pay">₹8,000 / month</div>
-                <p style="font-size: 0.9rem; margin-top: 5px;">Prepare 5 vegetarian tiffins daily for office staff nearby.</p>
-                
-                <div class="job-details">
-                    <div class="detail-item">⏱ <strong>Time:</strong> 11:00 AM - 1:00 PM</div>
-                    <div class="detail-item">📍 <strong>Location:</strong> From Home (Pickup arranged)</div>
-                    <div class="detail-item">📋 <strong>Req:</strong> Clean Kitchen, Hygiene Cert</div>
-                </div>
-                <a href="#" class="btn-apply" onclick="alert('Application Request Sent!')">Apply Now</a>
-            </div>
-
-            <div class="job-card">
-                <div class="card-header">
-                    <span class="badge teaching">Teaching</span>
-                    <span style="font-size:1.5rem;">📚</span>
-                </div>
-                <div class="job-title">Hindi Tutor (Class 5)</div>
-                <div class="job-pay">₹300 / hour</div>
-                <p style="font-size: 0.9rem; margin-top: 5px;">Teach Hindi grammar to a student via Zoom call.</p>
-                
-                <div class="job-details">
-                    <div class="detail-item">⏱ <strong>Time:</strong> 4:00 PM - 5:00 PM</div>
-                    <div class="detail-item">📍 <strong>Location:</strong> Online (Zoom)</div>
-                    <div class="detail-item">📋 <strong>Req:</strong> Good Internet, Patience</div>
-                </div>
-                <a href="#" class="btn-apply" onclick="alert('Application Request Sent!')">Apply Now</a>
-            </div>
-
-            <div class="job-card">
-                <div class="card-header">
-                    <span class="badge craft">Art & Craft</span>
-                    <span style="font-size:1.5rem;">🧶</span>
-                </div>
-                <div class="job-title">Handmade Diya Decoration</div>
-                <div class="job-pay">₹4,000 / order</div>
-                <p style="font-size: 0.9rem; margin-top: 5px;">Paint and decorate 50 earthen diyas for a festival order.</p>
-                
-                <div class="job-details">
-                    <div class="detail-item">⏱ <strong>Time:</strong> Deadline: 3 Days</div>
-                    <div class="detail-item">📍 <strong>Location:</strong> Material delivered to you</div>
-                    <div class="detail-item">📋 <strong>Req:</strong> Painting Skills</div>
-                </div>
-                <a href="#" class="btn-apply" onclick="alert('Application Request Sent!')">Apply Now</a>
-            </div>
-
-            <div class="job-card">
-                <div class="card-header">
-                    <span class="badge data">Data Entry</span>
-                    <span style="font-size:1.5rem;">💻</span>
-                </div>
-                <div class="job-title">Excel Data Entry</div>
-                <div class="job-pay">₹500 / assignment</div>
-                <p style="font-size: 0.9rem; margin-top: 5px;">Type names and addresses from PDF into Excel sheets.</p>
-                
-                <div class="job-details">
-                    <div class="detail-item">⏱ <strong>Time:</strong> Flexible (Anytime)</div>
-                    <div class="detail-item">📍 <strong>Location:</strong> Remote</div>
-                    <div class="detail-item">📋 <strong>Req:</strong> Laptop/PC, Basic Excel</div>
-                </div>
-                <a href="#" class="btn-apply" onclick="alert('Application Request Sent!')">Apply Now</a>
-            </div>
-
-            <div class="job-card">
-                <div class="card-header">
-                    <span class="badge cooking">Cooking</span>
-                    <span style="font-size:1.5rem;">🥟</span>
-                </div>
-                <div class="job-title">Evening Snacks Order</div>
-                <div class="job-pay">₹1,500 One-time</div>
-                <p style="font-size: 0.9rem; margin-top: 5px;">Prepare 2kg Samosas for a birthday party.</p>
-                
-                <div class="job-details">
-                    <div class="detail-item">⏱ <strong>Time:</strong> Saturday 4 PM</div>
-                    <div class="detail-item">📍 <strong>Location:</strong> From Home</div>
-                    <div class="detail-item">📋 <strong>Req:</strong> Fresh Ingredients</div>
-                </div>
-                <a href="#" class="btn-apply" onclick="alert('Application Request Sent!')">Apply Now</a>
-            </div>
-
-            <div class="job-card">
-                <div class="card-header">
-                    <span class="badge craft">Stitching</span>
-                    <span style="font-size:1.5rem;">👗</span>
-                </div>
-                <div class="job-title">Kurti Alterations</div>
-                <div class="job-pay">₹50 / piece</div>
-                <p style="font-size: 0.9rem; margin-top: 5px;">Basic fitting and hemming for 10 Kurtis.</p>
-                
-                <div class="job-details">
-                    <div class="detail-item">⏱ <strong>Time:</strong> Flexible</div>
-                    <div class="detail-item">📍 <strong>Location:</strong> Nearby Boutique</div>
-                    <div class="detail-item">📋 <strong>Req:</strong> Sewing Machine</div>
-                </div>
-                <a href="#" class="btn-apply" onclick="alert('Application Request Sent!')">Apply Now</a>
-            </div>
-
+        <div class="job-grid" id="job-grid">
+            <div class="loading-text">Loading jobs...</div>
         </div>
     </div>
+
+    <div class="toast" id="toast"></div>
+
+<script>
+    const API_BASE = window.location.origin;
+    const token = localStorage.getItem('empowerher_token');
+
+    // Show logout if logged in
+    if (token) {
+        document.getElementById('logout-btn').style.display = 'inline-block';
+    }
+
+    function logout() {
+        localStorage.removeItem('empowerher_token');
+        localStorage.removeItem('empowerher_user');
+        window.location.href = 'index.html';
+    }
+
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = 'toast ' + type;
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 3000);
+    }
+
+    function getBadgeClass(category) {
+        const map = {
+            'Cooking': 'cooking',
+            'Teaching': 'teaching',
+            'Art & Craft': 'craft',
+            'Stitching': 'craft',
+            'Data Entry': 'data'
+        };
+        return map[category] || 'data';
+    }
+
+    async function loadJobs() {
+        const skill = document.getElementById('filter-skill').value;
+        const time = document.getElementById('filter-time').value;
+
+        let url = `${API_BASE}/api/jobs?`;
+        if (skill !== 'Select Skill') url += `skill=${encodeURIComponent(skill)}&`;
+        if (time !== 'Time Available') url += `time=${encodeURIComponent(time)}&`;
+
+        try {
+            const res = await fetch(url);
+            const data = await res.json();
+
+            document.getElementById('job-count').textContent = `Showing ${data.total} Jobs`;
+            document.getElementById('job-total-hero').textContent = `${data.total}+ Verified jobs available today`;
+
+            const grid = document.getElementById('job-grid');
+
+            if (data.jobs.length === 0) {
+                grid.innerHTML = '<div class="loading-text">No jobs found matching your filters. Try different criteria.</div>';
+                return;
+            }
+
+            grid.innerHTML = data.jobs.map(job => `
+                <div class="job-card">
+                    <div class="card-header">
+                        <span class="badge ${getBadgeClass(job.category)}">${job.category}</span>
+                        <span style="font-size:1.5rem;">${job.icon}</span>
+                    </div>
+                    <div class="job-title">${job.title}</div>
+                    <div class="job-pay">${job.pay}</div>
+                    <p style="font-size: 0.9rem; margin-top: 5px;">${job.description}</p>
+                    
+                    <div class="job-details">
+                        <div class="detail-item">⏱ <strong>Time:</strong> ${job.time}</div>
+                        <div class="detail-item">📍 <strong>Location:</strong> ${job.location}</div>
+                        <div class="detail-item">📋 <strong>Req:</strong> ${job.requirements}</div>
+                    </div>
+                    <button class="btn-apply" onclick="applyToJob(${job.id}, this)" id="apply-btn-${job.id}">Apply Now</button>
+                </div>
+            `).join('');
+
+        } catch (err) {
+            console.error('Load jobs error:', err);
+            document.getElementById('job-grid').innerHTML = '<div class="loading-text">Error loading jobs. Is the server running?</div>';
+        }
+    }
+
+    async function applyToJob(jobId, btn) {
+        if (!token) {
+            showToast('Please login first to apply for jobs.', 'error');
+            setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Applying...';
+
+        try {
+            const res = await fetch(`${API_BASE}/api/jobs/${jobId}/apply`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                if (res.status === 409) {
+                    btn.textContent = '✓ Already Applied';
+                    btn.classList.add('applied');
+                    showToast(data.error, 'error');
+                } else {
+                    btn.disabled = false;
+                    btn.textContent = 'Apply Now';
+                    showToast(data.error, 'error');
+                }
+                return;
+            }
+
+            btn.textContent = '✓ Applied!';
+            btn.classList.add('applied');
+            showToast(data.message, 'success');
+        } catch (err) {
+            console.error('Apply error:', err);
+            btn.disabled = false;
+            btn.textContent = 'Apply Now';
+            showToast('Network error. Please try again.', 'error');
+        }
+    }
+
+    // Load jobs on page load
+    loadJobs();
+</script>
 
 </body>
 </html>

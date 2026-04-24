@@ -5,152 +5,149 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Learn Skills | EmpowerHer</title>
     <style>
-        /* --- THEME COLORS --- */
-        :root {
-            --primary: #2A9D8F; --secondary: #E76F51; --accent: #E9C46A; 
-            --bg: #FDFCF5; --text: #264653; --white: #ffffff;
-            --shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
+        :root { --primary: #2A9D8F; --secondary: #E76F51; --accent: #E9C46A; --bg: #FDFCF5; --text: #264653; --white: #ffffff; --shadow: 0 4px 15px rgba(0,0,0,0.05); --success: #28a745; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background-color: var(--bg); color: var(--text); }
         a { text-decoration: none; color: inherit; }
-
-        /* --- NAV --- */
         nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 5%; background: var(--white); position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
         .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
-        .nav-links { display: flex; gap: 2rem; }
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
         .btn-primary { background: var(--secondary); color: white; padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; }
-
-        /* --- HERO --- */
-        .learn-hero {
-            background: #e0f2f1;
-            padding: 3rem 5%;
-            text-align: center;
-            border-bottom: 5px solid var(--accent);
-        }
+        .btn-logout { background: none; border: 1px solid #ccc; padding: 0.4rem 1rem; border-radius: 50px; cursor: pointer; font-size: 0.85rem; color: #666; }
+        .learn-hero { background: #e0f2f1; padding: 3rem 5%; text-align: center; border-bottom: 5px solid var(--accent); }
         .learn-hero h1 { font-size: 2.5rem; margin-bottom: 1rem; }
         .learn-hero p { max-width: 600px; margin: 0 auto; color: #555; }
-
-        /* --- PROGRESS BAR --- */
-        .progress-section {
-            background: var(--white); padding: 1.5rem 5%; margin: -30px 5% 2rem;
-            border-radius: 15px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 20px;
-        }
+        .progress-section { background: var(--white); padding: 1.5rem 5%; margin: -30px 5% 2rem; border-radius: 15px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 20px; }
         .progress-bar-bg { flex: 1; height: 10px; background: #eee; border-radius: 5px; overflow: hidden; }
-        .progress-fill { width: 35%; height: 100%; background: var(--success, #28a745); }
-
-        /* --- COURSE GRID --- */
+        .progress-fill { height: 100%; background: var(--success); transition: width 1s ease; }
         .container { padding: 0 5% 4rem; }
         .filters { display: flex; gap: 15px; margin-bottom: 2rem; overflow-x: auto; padding-bottom: 10px; }
         .filter-pill { padding: 8px 20px; background: var(--white); border: 1px solid #ccc; border-radius: 50px; cursor: pointer; white-space: nowrap; }
         .filter-pill.active { background: var(--primary); color: white; border-color: var(--primary); }
-
         .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; }
-        
-        .video-card {
-            background: var(--white); border-radius: 15px; overflow: hidden; box-shadow: var(--shadow); transition: 0.3s;
-        }
+        .video-card { background: var(--white); border-radius: 15px; overflow: hidden; box-shadow: var(--shadow); transition: 0.3s; position: relative; }
         .video-card:hover { transform: translateY(-5px); }
-        
-        .thumbnail {
-            height: 160px; background: #ddd; position: relative; display: flex; align-items: center; justify-content: center;
-            background-size: cover; background-position: center;
-        }
-        .play-btn { font-size: 3rem; color: rgba(255,255,255,0.8); }
-        
+        .video-card.completed-card { border: 2px solid var(--success); }
+        .thumbnail { height: 160px; position: relative; display: flex; align-items: center; justify-content: center; }
+        .play-btn { font-size: 3rem; color: rgba(255,255,255,0.8); cursor: pointer; }
         .card-body { padding: 1.5rem; }
         .tag { font-size: 0.75rem; color: var(--primary); font-weight: bold; text-transform: uppercase; margin-bottom: 5px; display: block; }
         .duration { font-size: 0.85rem; color: #888; display: flex; align-items: center; gap: 5px; margin-top: 10px; }
-
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .progress-section { flex-direction: column; align-items: flex-start; gap: 10px; }
-            .progress-bar-bg { width: 100%; }
-        }
+        .btn-complete { margin-top: 12px; padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.85rem; width: 100%; }
+        .btn-complete.pending { background: var(--primary); color: white; }
+        .btn-complete.done { background: #d4edda; color: var(--success); cursor: default; }
+        .completed-badge { position: absolute; top: 10px; right: 10px; background: var(--success); color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; }
+        .toast { position: fixed; bottom: 30px; right: 30px; background: var(--text); color: white; padding: 15px 25px; border-radius: 10px; z-index: 9999; display: none; }
+        .toast.success { background: var(--success); }
+        .toast.error { background: #d63031; }
+        .loading-text { text-align: center; padding: 2rem; color: #999; }
+        @media (max-width: 768px) { .nav-links { display: none; } .progress-section { flex-direction: column; align-items: flex-start; gap: 10px; } .progress-bar-bg { width: 100%; } }
     </style>
 </head>
 <body>
-
     <nav>
         <div class="logo">EmpowerHer</div>
         <div class="nav-links">
             <a href="dashboard.html">Home</a>
             <a href="jobs.html">Find Work</a>
             <a href="community.html">Community</a>
+            <button class="btn-logout" id="logout-btn" onclick="logout()" style="display:none;">Logout</button>
         </div>
-        
     </nav>
-
     <div class="learn-hero">
         <h1>Learn in 5 Minutes</h1>
         <p>Short, simple videos to help you manage orders, use digital payments, and talk to clients confidently.</p>
     </div>
-
     <div class="progress-section">
-        <div>
-            <strong>Your Learning Streak:</strong> 🔥 3 Days
-        </div>
-        <div class="progress-bar-bg">
-            <div class="progress-fill"></div>
-        </div>
-        <div style="font-size: 0.9rem;">35% Complete</div>
+        <div><strong>Your Learning Streak:</strong> 🔥 <span id="streak-count">0</span> Days</div>
+        <div class="progress-bar-bg"><div class="progress-fill" id="progress-fill" style="width:0%;"></div></div>
+        <div style="font-size:0.9rem;" id="progress-text">0% Complete</div>
     </div>
-
     <div class="container">
-        <div class="filters">
-            <div class="filter-pill active">All Skills</div>
-            <div class="filter-pill">Digital Tools</div>
-            <div class="filter-pill">Cooking Tips</div>
-            <div class="filter-pill">Packaging</div>
-            <div class="filter-pill">English</div>
+        <div class="filters" id="filters">
+            <div class="filter-pill active" onclick="filterCourses('All Skills', this)">All Skills</div>
+            <div class="filter-pill" onclick="filterCourses('Digital Tools', this)">Digital Tools</div>
+            <div class="filter-pill" onclick="filterCourses('Business', this)">Business</div>
+            <div class="filter-pill" onclick="filterCourses('Packaging', this)">Packaging</div>
+            <div class="filter-pill" onclick="filterCourses('Soft Skills', this)">Soft Skills</div>
         </div>
-
-        <div class="video-grid">
-            <div class="video-card">
-                <div class="thumbnail" style="background-color: #264653;">
-                    <span class="play-btn">▶</span>
-                </div>
-                <div class="card-body">
-                    <span class="tag">Digital Tools</span>
-                    <h3>How to use Google Pay safely</h3>
-                    <div class="duration">⏱ 4 mins • Beginner</div>
-                </div>
-            </div>
-
-            <div class="video-card">
-                <div class="thumbnail" style="background-color: #E76F51;">
-                    <span class="play-btn">▶</span>
-                </div>
-                <div class="card-body">
-                    <span class="tag">Business</span>
-                    <h3>Pricing your Tiffin Service</h3>
-                    <div class="duration">⏱ 8 mins • Intermediate</div>
-                </div>
-            </div>
-
-            <div class="video-card">
-                <div class="thumbnail" style="background-color: #E9C46A;">
-                    <span class="play-btn">▶</span>
-                </div>
-                <div class="card-body">
-                    <span class="tag">Packaging</span>
-                    <h3>Eco-friendly Packing Ideas</h3>
-                    <div class="duration">⏱ 5 mins • Creative</div>
-                </div>
-            </div>
-
-            <div class="video-card">
-                <div class="thumbnail" style="background-color: #2A9D8F;">
-                    <span class="play-btn">▶</span>
-                </div>
-                <div class="card-body">
-                    <span class="tag">Soft Skills</span>
-                    <h3>Basic English for Client Calls</h3>
-                    <div class="duration">⏱ 6 mins • Beginner</div>
-                </div>
-            </div>
-        </div>
+        <div class="video-grid" id="video-grid"><div class="loading-text">Loading courses...</div></div>
     </div>
+    <div class="toast" id="toast"></div>
+<script>
+const API_BASE = window.location.origin;
+const token = localStorage.getItem('empowerher_token');
+if (token) document.getElementById('logout-btn').style.display = 'inline-block';
 
+function logout() { localStorage.removeItem('empowerher_token'); localStorage.removeItem('empowerher_user'); window.location.href = 'index.html'; }
+function showToast(msg, type='success') { const t=document.getElementById('toast'); t.textContent=msg; t.className='toast '+type; t.style.display='block'; setTimeout(()=>{t.style.display='none';},3000); }
+
+let currentFilter = 'All Skills';
+
+function filterCourses(cat, el) {
+    currentFilter = cat;
+    document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    loadCourses();
+}
+
+async function loadCourses() {
+    const h = {}; if(token) h['Authorization'] = 'Bearer ' + token;
+    let url = API_BASE + '/api/courses';
+    if (currentFilter !== 'All Skills') url += '?category=' + encodeURIComponent(currentFilter);
+
+    try {
+        const res = await fetch(url, { headers: h });
+        const data = await res.json();
+        const grid = document.getElementById('video-grid');
+
+        if (!data.courses.length) { grid.innerHTML = '<div class="loading-text">No courses in this category.</div>'; return; }
+
+        grid.innerHTML = data.courses.map(c => {
+            const done = c.completed === 1;
+            return '<div class="video-card' + (done ? ' completed-card' : '') + '">' +
+                '<div class="thumbnail" style="background-color:' + c.color + ';">' +
+                (done ? '<span class="completed-badge">✓ Completed</span>' : '') +
+                '<span class="play-btn">▶</span></div>' +
+                '<div class="card-body"><span class="tag">' + c.category + '</span>' +
+                '<h3>' + c.title + '</h3>' +
+                '<div class="duration">⏱ ' + c.duration + ' • ' + c.level + '</div>' +
+                '<button class="btn-complete ' + (done ? 'done' : 'pending') + '" onclick="completeCourse(' + c.id + ', this)" ' + (done ? 'disabled' : '') + '>' +
+                (done ? '✓ Completed' : 'Mark as Complete') + '</button></div></div>';
+        }).join('');
+    } catch(e) { document.getElementById('video-grid').innerHTML = '<div class="loading-text">Error loading courses.</div>'; }
+}
+
+async function loadProgress() {
+    if (!token) { document.getElementById('progress-text').textContent = 'Login to track'; return; }
+    try {
+        const res = await fetch(API_BASE + '/api/courses/progress', { headers: { 'Authorization': 'Bearer ' + token } });
+        const data = await res.json();
+        document.getElementById('progress-fill').style.width = data.percentage + '%';
+        document.getElementById('progress-text').textContent = data.percentage + '% Complete';
+        document.getElementById('streak-count').textContent = data.streak;
+    } catch(e) {}
+}
+
+async function completeCourse(id, btn) {
+    if (!token) { showToast('Please login first.', 'error'); return; }
+    btn.disabled = true; btn.textContent = 'Saving...';
+    try {
+        const res = await fetch(API_BASE + '/api/courses/' + id + '/complete', {
+            method: 'POST', headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        if (res.ok) {
+            btn.className = 'btn-complete done'; btn.textContent = '✓ Completed';
+            btn.closest('.video-card').classList.add('completed-card');
+            showToast(data.message || 'Course completed!');
+            document.getElementById('progress-fill').style.width = data.percentage + '%';
+            document.getElementById('progress-text').textContent = data.percentage + '% Complete';
+        } else { btn.disabled = false; btn.textContent = 'Mark as Complete'; showToast(data.error, 'error'); }
+    } catch(e) { btn.disabled = false; btn.textContent = 'Mark as Complete'; showToast('Error.', 'error'); }
+}
+
+loadCourses(); loadProgress();
+</script>
 </body>
 </html>
