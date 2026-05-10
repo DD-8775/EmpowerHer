@@ -31,19 +31,20 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error.' });
 });
 
-// --- Initialize DB, seed, and start server ---
+// --- Initialize DB and start server ---
 async function start() {
-  const { getDb } = require('./db/database');
-  const db = await getDb();
+  const { initDb, queryOne } = require('./db/database');
+
+  // Create all tables
+  await initDb();
 
   // Auto-seed if empty
-  const result = db.exec("SELECT COUNT(*) as count FROM jobs");
-  const jobCount = result.length > 0 ? result[0].values[0][0] : 0;
+  const result = await queryOne('SELECT COUNT(*) as count FROM jobs');
+  const jobCount = parseInt(result?.count) || 0;
   if (jobCount === 0) {
     console.log('📦 First run detected. Seeding database...');
     const seed = require('./db/seed');
-    // Wait a moment for seed to complete
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await seed();
   }
 
   app.listen(PORT, () => {

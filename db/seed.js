@@ -1,13 +1,16 @@
-const { getDb, prepare, saveDb } = require('./database');
+require('dotenv').config();
+const { query, queryOne, initDb } = require('./database');
+const bcrypt = require('bcryptjs');
 
 async function seed() {
   console.log('🌱 Seeding database...');
-  const db = await getDb();
+
+  // Ensure tables exist
+  await initDb();
 
   // Check if already seeded
-  const result = db.exec("SELECT COUNT(*) as count FROM jobs");
-  const jobCount = result.length > 0 ? result[0].values[0][0] : 0;
-  if (jobCount > 0) {
+  const result = await queryOne('SELECT COUNT(*) as count FROM jobs');
+  if (parseInt(result.count) > 0) {
     console.log('Database already seeded. Skipping.');
     return;
   }
@@ -23,7 +26,10 @@ async function seed() {
   ];
 
   for (const j of jobs) {
-    db.run("INSERT INTO jobs (title, category, pay, description, time, location, requirements, icon, badgeClass) VALUES (?,?,?,?,?,?,?,?,?)", j);
+    await query(
+      `INSERT INTO jobs (title, category, pay, description, time, location, requirements, icon, "badgeClass") VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
+      j
+    );
   }
   console.log(`  ✅ Inserted ${jobs.length} jobs`);
 
@@ -36,7 +42,10 @@ async function seed() {
   ];
 
   for (const c of courses) {
-    db.run("INSERT INTO courses (title, category, duration, level, color) VALUES (?,?,?,?,?)", c);
+    await query(
+      'INSERT INTO courses (title, category, duration, level, color) VALUES ($1,$2,$3,$4,$5)',
+      c
+    );
   }
   console.log(`  ✅ Inserted ${courses.length} courses`);
 
@@ -47,34 +56,45 @@ async function seed() {
   ];
 
   for (const m of mentors) {
-    db.run("INSERT INTO mentors (name, specialty, icon) VALUES (?,?,?)", m);
+    await query(
+      'INSERT INTO mentors (name, specialty, icon) VALUES ($1,$2,$3)',
+      m
+    );
   }
   console.log(`  ✅ Inserted ${mentors.length} mentors`);
 
   // --- Seed Demo Users ---
-  const bcrypt = require('bcryptjs');
   const hashedPassword = bcrypt.hashSync('demo1234', 10);
 
-  db.run("INSERT INTO users (fullName, mobile, password, skills, profileCompletion) VALUES (?,?,?,?,?)",
-    ['Anita Sharma', '9876543210', hashedPassword, 'Cooking', 70]);
-  db.run("INSERT INTO users (fullName, mobile, password, skills, profileCompletion) VALUES (?,?,?,?,?)",
-    ['Riya Kapoor', '9876543211', hashedPassword, 'Teaching', 55]);
+  await query(
+    `INSERT INTO users ("fullName", mobile, password, skills, "profileCompletion") VALUES ($1,$2,$3,$4,$5)`,
+    ['Anita Sharma', '9876543210', hashedPassword, 'Cooking', 70]
+  );
+  await query(
+    `INSERT INTO users ("fullName", mobile, password, skills, "profileCompletion") VALUES ($1,$2,$3,$4,$5)`,
+    ['Riya Kapoor', '9876543211', hashedPassword, 'Teaching', 55]
+  );
 
   // Get user IDs
-  const u1 = db.exec("SELECT id FROM users WHERE mobile='9876543210'")[0].values[0][0];
-  const u2 = db.exec("SELECT id FROM users WHERE mobile='9876543211'")[0].values[0][0];
+  const u1 = await queryOne(`SELECT id FROM users WHERE mobile = $1`, ['9876543210']);
+  const u2 = await queryOne(`SELECT id FROM users WHERE mobile = $1`, ['9876543211']);
 
-  db.run("INSERT INTO posts (userId, content, likes) VALUES (?,?,?)",
-    [u1, 'I just delivered my first bulk order of 20 Tiffins! 😍 Thank you to the mentors here who helped me with packaging tips.', 24]);
-  db.run("INSERT INTO posts (userId, content, likes) VALUES (?,?,?)",
-    [u2, 'Question: How do you handle payments from parents? Do you ask for advance or end of month?', 8]);
+  await query(
+    `INSERT INTO posts ("userId", content, likes) VALUES ($1,$2,$3)`,
+    [u1.id, 'I just delivered my first bulk order of 20 Tiffins! 😍 Thank you to the mentors here who helped me with packaging tips.', 24]
+  );
+  await query(
+    `INSERT INTO posts ("userId", content, likes) VALUES ($1,$2,$3)`,
+    [u2.id, 'Question: How do you handle payments from parents? Do you ask for advance or end of month?', 8]
+  );
 
   console.log('  ✅ Inserted 2 demo users and 2 sample posts');
-
-  saveDb();
   console.log('🎉 Seeding complete!');
 }
 
-seed().catch(err => console.error('Seed error:', err));
+seed().catch(err => {
+  console.error('Seed error:', err);
+  process.exit(1);
+});
 
 module.exports = seed;

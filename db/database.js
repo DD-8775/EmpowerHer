@@ -1,43 +1,51 @@
-const initSqlJs = require('sql.js');
-const fs = require('fs');
-const path = require('path');
+const { neon } = require('@neondatabase/serverless');
 
-const DB_PATH = path.join(__dirname, '..', 'empowerher.db');
+let sql = null;
 
-let db = null;
-
-async function getDb() {
-  if (db) return db;
-
-  const SQL = await initSqlJs();
-
-  // Load existing database or create new one
-  if (fs.existsSync(DB_PATH)) {
-    const buffer = fs.readFileSync(DB_PATH);
-    db = new SQL.Database(buffer);
-  } else {
-    db = new SQL.Database();
+function getSQL() {
+  if (sql) return sql;
+  if (!process.env.DATABASE_URL) {
+    throw new Error('DATABASE_URL environment variable is not set. Get your connection string from https://console.neon.tech');
   }
+  sql = neon(process.env.DATABASE_URL);
+  return sql;
+}
 
-  // Create tables
-  db.run(`
+// Helper: run a parameterized query and return rows
+async function query(text, params = []) {
+  const sql = getSQL();
+  const rows = await sql.query(text, params);
+  return rows;
+}
+
+// Helper: run a query and return the first row
+async function queryOne(text, params = []) {
+  const rows = await query(text, params);
+  return rows[0] || null;
+}
+
+// Initialize all tables (uses tagged template literals for DDL)
+async function initDb() {
+  const sql = getSQL();
+
+  await sql`
     CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      fullName TEXT NOT NULL,
+      id SERIAL PRIMARY KEY,
+      "fullName" TEXT NOT NULL,
       mobile TEXT UNIQUE,
       email TEXT UNIQUE,
       password TEXT,
-      googleId TEXT UNIQUE,
+      "googleId" TEXT UNIQUE,
       avatar TEXT DEFAULT '',
       skills TEXT DEFAULT '',
-      profileCompletion INTEGER DEFAULT 30,
-      createdAt TEXT DEFAULT (datetime('now'))
+      "profileCompletion" INTEGER DEFAULT 30,
+      "createdAt" TIMESTAMP DEFAULT NOW()
     )
-  `);
+  `;
 
-  db.run(`
+  await sql`
     CREATE TABLE IF NOT EXISTS jobs (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id SERIAL PRIMARY KEY,
       title TEXT NOT NULL,
       category TEXT NOT NULL,
       pay TEXT NOT NULL,
@@ -46,135 +54,83 @@ async function getDb() {
       location TEXT NOT NULL,
       requirements TEXT NOT NULL,
       icon TEXT DEFAULT '',
-      badgeClass TEXT DEFAULT '',
-      createdAt TEXT DEFAULT (datetime('now'))
+      "badgeClass" TEXT DEFAULT '',
+      "createdAt" TIMESTAMP DEFAULT NOW()
     )
-  `);
+  `;
 
-  db.run(`
+  await sql`
     CREATE TABLE IF NOT EXISTS applications (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      userId INTEGER NOT NULL,
-      jobId INTEGER NOT NULL,
+      id SERIAL PRIMARY KEY,
+      "userId" INTEGER NOT NULL REFERENCES users(id),
+      "jobId" INTEGER NOT NULL REFERENCES jobs(id),
       status TEXT DEFAULT 'pending',
-      appliedAt TEXT DEFAULT (datetime('now')),
-      FOREIGN KEY (userId) REFERENCES users(id),
-      FOREIGN KEY (jobId) REFERENCES jobs(id),
-      UNIQUE(userId, jobId)
+      "appliedAt" TIMESTAMP DEFAULT NOW(),
+      UNIQUE("userId", "jobId")
     )
-  `);
+  `;
 
-  db.run(`
+  await sql`
     CREATE TABLE IF NOT EXISTS posts (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      userId INTEGER NOT NULL,
+      id SERIAL PRIMARY KEY,
+      "userId" INTEGER NOT NULL REFERENCES users(id),
       content TEXT NOT NULL,
       likes INTEGER DEFAULT 0,
-      createdAt TEXT DEFAULT (datetime('now')),
-      FOREIGN KEY (userId) REFERENCES users(id)
+      "createdAt" TIMESTAMP DEFAULT NOW()
     )
-  `);
+  `;
 
-  db.run(`
+  await sql`
     CREATE TABLE IF NOT EXISTS post_likes (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      postId INTEGER NOT NULL,
-      userId INTEGER NOT NULL,
-      FOREIGN KEY (postId) REFERENCES posts(id),
-      FOREIGN KEY (userId) REFERENCES users(id),
-      UNIQUE(postId, userId)
+      id SERIAL PRIMARY KEY,
+      "postId" INTEGER NOT NULL REFERENCES posts(id),
+      "userId" INTEGER NOT NULL REFERENCES users(id),
+      UNIQUE("postId", "userId")
     )
-  `);
+  `;
 
-  db.run(`
+  await sql`
     CREATE TABLE IF NOT EXISTS comments (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      postId INTEGER NOT NULL,
-      userId INTEGER NOT NULL,
+      id SERIAL PRIMARY KEY,
+      "postId" INTEGER NOT NULL REFERENCES posts(id),
+      "userId" INTEGER NOT NULL REFERENCES users(id),
       content TEXT NOT NULL,
-      createdAt TEXT DEFAULT (datetime('now')),
-      FOREIGN KEY (postId) REFERENCES posts(id),
-      FOREIGN KEY (userId) REFERENCES users(id)
+      "createdAt" TIMESTAMP DEFAULT NOW()
     )
-  `);
+  `;
 
-  db.run(`
+  await sql`
     CREATE TABLE IF NOT EXISTS courses (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id SERIAL PRIMARY KEY,
       title TEXT NOT NULL,
       category TEXT NOT NULL,
       duration TEXT NOT NULL,
       level TEXT NOT NULL,
       color TEXT DEFAULT '#264653'
     )
-  `);
+  `;
 
-  db.run(`
+  await sql`
     CREATE TABLE IF NOT EXISTS user_progress (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      userId INTEGER NOT NULL,
-      courseId INTEGER NOT NULL,
+      id SERIAL PRIMARY KEY,
+      "userId" INTEGER NOT NULL REFERENCES users(id),
+      "courseId" INTEGER NOT NULL REFERENCES courses(id),
       completed INTEGER DEFAULT 0,
-      completedAt TEXT,
-      FOREIGN KEY (userId) REFERENCES users(id),
-      FOREIGN KEY (courseId) REFERENCES courses(id),
-      UNIQUE(userId, courseId)
+      "completedAt" TIMESTAMP,
+      UNIQUE("userId", "courseId")
     )
-  `);
+  `;
 
-  db.run(`
+  await sql`
     CREATE TABLE IF NOT EXISTS mentors (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id SERIAL PRIMARY KEY,
       name TEXT NOT NULL,
       specialty TEXT NOT NULL,
       icon TEXT DEFAULT ''
     )
-  `);
+  `;
 
-  saveDb();
-  return db;
+  console.log('✅ All database tables initialized');
 }
 
-function saveDb() {
-  if (db) {
-    const data = db.export();
-    const buffer = Buffer.from(data);
-    fs.writeFileSync(DB_PATH, buffer);
-  }
-}
-
-// Helper functions to match better-sqlite3 style API
-function prepare(sql) {
-  return {
-    run(...params) {
-      db.run(sql, params);
-      const result = db.exec("SELECT last_insert_rowid() as id");
-      const lastId = result.length > 0 ? result[0].values[0][0] : 0;
-      saveDb();
-      return { lastInsertRowid: lastId };
-    },
-    get(...params) {
-      const stmt = db.prepare(sql);
-      stmt.bind(params);
-      if (stmt.step()) {
-        const row = stmt.getAsObject();
-        stmt.free();
-        return row;
-      }
-      stmt.free();
-      return undefined;
-    },
-    all(...params) {
-      const stmt = db.prepare(sql);
-      stmt.bind(params);
-      const rows = [];
-      while (stmt.step()) {
-        rows.push(stmt.getAsObject());
-      }
-      stmt.free();
-      return rows;
-    }
-  };
-}
-
-module.exports = { getDb, saveDb, prepare };
+module.exports = { getSQL, query, queryOne, initDb };
